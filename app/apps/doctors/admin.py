@@ -24,7 +24,7 @@ class DoctorAdmin(admin.ModelAdmin):
     list_display = ("name", "display_photo", "status", "created_at")
     list_filter = ("specializations", "status", "created_at")
     search_fields = ("first_name", "last_name", "phone_number")
-    search_help_text = _("Enter name to search")
+    search_help_text = _("Enter name or phone number to search")
     date_hierarchy = 'created_at'
     inlines = (WorkScheduleInline,)
 
