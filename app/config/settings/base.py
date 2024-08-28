@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     # internal apps
     'common',
+    'doctors',
 ]
 
 MIDDLEWARE = [
