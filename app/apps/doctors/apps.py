@@ -8,3 +8,6 @@ class DoctorConfig(AppConfig):
 
     verbose_name = _('Doctors')
     verbose_name_plural = _('Doctors')
+
+    def ready(self):
+        from . import signals  # noqa
