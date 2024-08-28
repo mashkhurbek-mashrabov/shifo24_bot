@@ -28,7 +28,7 @@ class Doctor(BaseModelV2):
     lng = models.FloatField(_('Longitude'), null=True, blank=True)
     lunch_start_time = models.TimeField(_('Lunch start time'), null=True, blank=True)
     lunch_end_time = models.TimeField(_('Lunch end time'), null=True, blank=True)
-    specialization = models.ManyToManyField('common.Specialization', verbose_name=_('Specializations'),
+    specializations = models.ManyToManyField('common.Specialization', verbose_name=_('Specializations'),
                                             related_name='doctors', blank=True,
                                             limit_choices_to={'is_active': True,
                                                               'children__isnull': True})
