@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'common',
     'doctors',
     'bot',
+    'order',
 ]
 
 MIDDLEWARE = [
