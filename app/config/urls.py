@@ -20,9 +20,12 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.views.generic import RedirectView
 from django.contrib.staticfiles.storage import staticfiles_storage
+from bot.constants import WEBHOOK_URL_PATH
+from bot.webhook_handler import process_webhook
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(WEBHOOK_URL_PATH, process_webhook),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('/images/favicon.ico'))),
 ]
 

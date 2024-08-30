@@ -4,8 +4,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
+DOMAIN = os.environ.get('DOMAIN')
 EXCEPTION_CHANNEL_ID = os.environ.get('EXCEPTION_CHANNEL_ID')
-WEBHOOK_URL_PATH = 'bot/'
+WEBHOOK_URL_PATH = 'bot'
 
 
 class LanguageChoices(models.TextChoices):
@@ -24,4 +25,5 @@ class CallbackData:
     MAIN_MENU_BUTTON = 'MAIN_MENU_BUTTON'
     BACK_BUTTON = 'BACK_BUTTON'
     SKIP = 'SKIP'
+    CONTINUE = 'CONTINUE'
     EXCEPTION = 'EXCEPTION'
