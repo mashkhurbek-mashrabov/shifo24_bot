@@ -19,6 +19,9 @@ class BotUserSteps(models.IntegerChoices):
     LISTING_LANGUAGE = 1, _('Listing language')
     EDIT_LANGUAGE = 2, _('Edit language')
     MAIN_MENU = 3, _('Main menu')
+    GET_PHONE_NUMBER = 4, _('Get phone number')
+    EDIT_PHONE_NUMBER = 5, _('Edit phone number')
+    SETTINGS = 6, _('Settings')
 
 
 class CallbackData:
