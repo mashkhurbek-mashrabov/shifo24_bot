@@ -28,7 +28,7 @@ class TelegramUser(BaseModelV2):
                                 choices=LanguageChoices.choices,
                                 default=LanguageChoices.UZBEK)
     step = models.SmallIntegerField(_('Step'), choices=BotUserSteps.choices, default=BotUserSteps.LISTING_LANGUAGE)
-    data = models.JSONField(null=True, blank=True)
+    data = models.JSONField(null=True, blank=True, default=dict)
 
     def __str__(self):
         return f"{self.chat_id} - {self.name}"
