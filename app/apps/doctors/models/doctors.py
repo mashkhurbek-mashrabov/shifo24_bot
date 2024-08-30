@@ -3,7 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import FileExtensionValidator, MaxLengthValidator
 
 from common.models.base import BaseModelV2
-from doctors.constants import DayChoices, DoctorStatusChoices
+from .rate import Rate
+from ..constants import DayChoices, DoctorStatusChoices
 
 
 class Doctor(BaseModelV2):
@@ -54,6 +55,11 @@ class Doctor(BaseModelV2):
     @property
     def name(self):
         return f"{self.first_name} {self.last_name}"
+
+    @property
+    def average_rating(self):
+        rate = Rate.objects.filter(doctor=self).aggregate(models.Avg('rate'))['rate__avg']
+        return rate or 0
 
 
 class WorkSchedule(models.Model):

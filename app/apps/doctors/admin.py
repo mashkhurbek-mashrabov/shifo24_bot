@@ -9,6 +9,7 @@ from django.utils.html import format_html
 from django.utils import timezone
 
 from .models.doctors import Doctor, WorkSchedule
+from .models.rate import Rate
 from .forms import DoctorForm
 
 
@@ -21,7 +22,7 @@ class WorkScheduleInline(admin.TabularInline):
 
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
-    list_display = ("name", "display_photo", "status", "created_at")
+    list_display = ("name", "display_photo", "average_rating", "status", "created_at")
     list_filter = ("specializations", "status", "created_at")
     search_fields = ("first_name", "last_name", "phone_number")
     search_help_text = _("Enter name or phone number to search")
@@ -105,3 +106,12 @@ class DoctorAdmin(admin.ModelAdmin):
         return response
 
     export_to_json.short_description = _('Export to JSON')
+
+@admin.register(Rate)
+class RateAdmin(admin.ModelAdmin):
+    list_display = ('doctor', 'user', 'rate', 'created_at')
+    list_filter = ('rate', 'created_at')
+    search_fields = ('doctor__first_name', 'doctor__last_name')
+    search_help_text = _("Enter doctor name to search")
+    date_hierarchy = 'created_at'
+    list_select_related = ('doctor', 'user')

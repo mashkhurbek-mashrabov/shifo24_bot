@@ -50,7 +50,7 @@ class Order(BaseModelV2):
 
     def save(self, *args, **kwargs):
         # Scheduled date validation, it should be only future date
-        if self.scheduled_date and self.scheduled_date <= timezone.now():
+        if not self.scheduled_date and self.scheduled_date and self.scheduled_date <= timezone.now():
             raise ValidationError({'scheduled_date': _('The scheduled date must be in the future.')})
         super().save(*args, **kwargs)
 
