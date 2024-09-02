@@ -5,7 +5,9 @@ from common.manager import SpecializationManager
 
 
 class Specialization(models.Model):
-    name = models.CharField(_('Name'), max_length=100, unique=True)
+    name_uz = models.CharField(_('Name (Uz)'), max_length=100, unique=True)
+    name_en = models.CharField(_('Name (En)'), max_length=100, unique=True)
+    name_ru = models.CharField(_('Name (Ru)'), max_length=100, unique=True)
     parent = models.ForeignKey(verbose_name=_('Parent'), to='self', related_name='children', on_delete=models.CASCADE,
                                null=True, blank=True)
     order = models.IntegerField(null=True, blank=True)
@@ -14,7 +16,7 @@ class Specialization(models.Model):
     objects = SpecializationManager()
 
     def __str__(self):
-        return self.name
+        return self.name_uz
 
     class Meta:
         verbose_name = 'Specialization'

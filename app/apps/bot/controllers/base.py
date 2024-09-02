@@ -240,3 +240,29 @@ class BaseController:
                                           text=self.message.message.text,
                                           reply_markup=markup,
                                           message_id=self.callback_query_id)
+
+    def clear_order(self) -> None:
+        self.user.data["order"] = {}
+        self.user.save()
+
+    @property
+    def order(self) -> dict:
+        try:
+            return self.user.data["order"]
+        except KeyError:
+            self.clear_order()
+            return {}
+
+    def update_order(self, data: dict) -> None:
+        try:
+            self.user.data["order"].update(data)
+        except KeyError:
+            self.user.data["order"] = data
+        self.user.save()
+
+    def delete_item_from_order(self, item_key: str) -> None:
+        try:
+            del self.user.data["order"][item_key]
+            self.user.save()
+        except KeyError:
+            self.clear_order()

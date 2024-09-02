@@ -13,9 +13,9 @@ class SpecializationChildInline(admin.TabularInline):
 
 @admin.register(Specialization)
 class SpecializationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'parent', 'order', 'is_active')
+    list_display = ('name_uz', 'parent', 'order', 'is_active')
     list_filter = ('is_active',)
-    search_fields = ('name', 'parent__name')
+    search_fields = ('name_uz', "name_ru" 'name_en')
     search_help_text = _("Enter name to search")
     ordering = ('order',)
     inlines = [SpecializationChildInline]

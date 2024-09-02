@@ -1,8 +1,10 @@
 import logging
 import re
 import telebot
+from charset_normalizer.md import is_arabic
 from telebot.types import KeyboardButton
 
+from common.models.specialization import Specialization
 from ..constants import BotUserSteps, LanguageChoices
 from .base import BaseController
 
@@ -26,7 +28,6 @@ class BotController(BaseController):
             self.get_phone_number()
         elif step == BotUserSteps.SETTINGS:
             self.settings(text=self.t('press one button'))
-
 
     def back_reply_button_handler(self):
         step = self.step
@@ -67,7 +68,10 @@ class BotController(BaseController):
             if edit:
                 self.settings(text=self.t('saved your language'))
             else:
-                self.get_phone_number()
+                if not self.user.phone_number:
+                    self.get_phone_number()
+                else:
+                    self.main_menu(text=self.t('guide'))
         except KeyError:
             self.list_language(text=self.messages("selected language doesn't exist"))
 
@@ -93,7 +97,7 @@ class BotController(BaseController):
             phone_number = "+" + phone_number if not phone_number.startswith("+") else phone_number
         else:
             phone_number = self.message.text
-            pattern =r'\+998\d{9}$'
+            pattern = r'\+998\d{9}$'
             match = re.match(pattern, phone_number)
             if not match:
                 self.get_phone_number(text=self.t('enter correct phone number'))
@@ -112,7 +116,8 @@ class BotController(BaseController):
     def main_menu(self, text: str = None, edit: bool = False):
         self.sync_user()
         markup = self.reply_markup()
-        markup.add(KeyboardButton(text=self.t('settings')))
+        markup.add(KeyboardButton(text=self.t('search doctor')))
+        markup.add(KeyboardButton(text=self.t('my queue')), KeyboardButton(text=self.t('settings')))
         if edit:
             self.delete_message(message_id=self.callback_query_id)
         self.send_message(message_text=text or self.t('main menu'), reply_markup=markup)
@@ -125,3 +130,6 @@ class BotController(BaseController):
         markup.add(self.main_menu_reply_button)
         self.send_message(message_text=text or self.t('settings'), reply_markup=markup)
         self.set_step(BotUserSteps.SETTINGS)
+
+    def get_speciality_list(self, child: bool = False, text: str = None):
+        specialization = Specialization.objects.get(is_active=True)
