@@ -3,9 +3,16 @@ from django.utils.translation import gettext_lazy as _
 from .models import Order
 from doctors.models.rate import Rate
 from .constants import OrderStatusChoices
+from unfold.admin import ModelAdmin, TabularInline
+from unfold.contrib.filters.admin import (
+    MultipleChoicesDropdownFilter,
+    RelatedDropdownFilter,
+    MultipleRelatedDropdownFilter,
+    RangeDateFilter
+)
 
 
-class RateInline(admin.TabularInline):
+class RateInline(TabularInline):
     model = Rate
     extra = 0
     max_num = 0
@@ -14,14 +21,24 @@ class RateInline(admin.TabularInline):
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(ModelAdmin):
     list_display = ['user', 'doctor', 'scheduled_date', 'status', "created_at"]
-    list_filter = ['status', "scheduled_date", 'created_at']
     search_fields = ['user__name', "user__phone_number"]
     search_help_text = _("Enter user name or phone number to search")
     date_hierarchy = 'created_at'
     list_select_related = ('user', 'doctor')
     inlines = [RateInline]
+
+    compressed_fields = True
+    warn_unsaved_form = True
+    list_filter_submit = True  # Submit button at the bottom of the filter
+    list_filter = [
+        ("status", MultipleChoicesDropdownFilter),
+        ("doctor", RelatedDropdownFilter),
+        ("specialization", MultipleRelatedDropdownFilter),
+        ("scheduled_date", RangeDateFilter),
+        ("created_at", RangeDateFilter),
+    ]
 
     actions = ['action_accept', 'action_complete', 'action_reject']
 

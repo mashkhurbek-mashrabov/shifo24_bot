@@ -7,29 +7,45 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 from django.utils import timezone
+from unfold.admin import ModelAdmin, TabularInline
+from unfold.contrib.filters.admin import (
+    MultipleChoicesDropdownFilter,
+    MultipleRelatedDropdownFilter,
+    RelatedDropdownFilter,
+    RangeDateFilter,
+    RangeNumericFilter,
+)
 
 from .models.doctors import Doctor, WorkSchedule
 from .models.rate import Rate
-from .forms import DoctorForm
 
 
-class WorkScheduleInline(admin.TabularInline):
+# from .forms import DoctorForm
+
+
+class WorkScheduleInline(TabularInline):
     model = WorkSchedule
     extra = 0
     min_num = 1
     max_num = 7
+    tab = True
 
 
 @admin.register(Doctor)
-class DoctorAdmin(admin.ModelAdmin):
+class DoctorAdmin(ModelAdmin):
     list_display = ("name", "display_photo", "average_rating", "status", "created_at")
-    list_filter = ("specializations", "status", "created_at")
     search_fields = ("first_name", "last_name", "phone_number")
     search_help_text = _("Enter name or phone number to search")
     date_hierarchy = 'created_at'
     inlines = (WorkScheduleInline,)
+    list_filter_submit = True
+    list_filter = [
+        ("status", MultipleChoicesDropdownFilter),
+        ("specializations", MultipleRelatedDropdownFilter),
+        ("created_at", RangeDateFilter),
+    ]
 
-    form = DoctorForm
+    # form = DoctorForm
 
     fieldsets = (
         (_('User Details'), {
@@ -107,11 +123,20 @@ class DoctorAdmin(admin.ModelAdmin):
 
     export_to_json.short_description = _('Export to JSON')
 
+
 @admin.register(Rate)
-class RateAdmin(admin.ModelAdmin):
+class RateAdmin(ModelAdmin):
     list_display = ('doctor', 'user', 'rate', 'created_at')
-    list_filter = ('rate', 'created_at')
     search_fields = ('doctor__first_name', 'doctor__last_name')
     search_help_text = _("Enter doctor name to search")
     date_hierarchy = 'created_at'
     list_select_related = ('doctor', 'user')
+    list_filter_submit = True
+    list_filter = (
+        ('rate', RangeNumericFilter),
+        ('order', RelatedDropdownFilter),
+        ('created_at', RangeDateFilter),
+    )
+
+    compressed_fields = True
+    warn_unsaved_form = True

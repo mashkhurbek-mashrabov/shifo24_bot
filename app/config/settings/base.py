@@ -15,6 +15,10 @@ import sys
 import environ
 from pathlib import Path
 
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
@@ -37,6 +41,13 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(',')
 # Application definition
 
 INSTALLED_APPS = [
+    # third-party apps
+    "unfold",
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",
+    "unfold.contrib.inlines",
+
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -148,3 +159,53 @@ MEDIA_ROOT = str(BASE_DIR.joinpath('vol', 'media'))
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# UNFOLD SETTINGS
+UNFOLD = {
+    "SITE_TITLE": "Shifo24",
+    "SITE_HEADER": "Shifo24 Admin",
+    "SITE_URL": "/",
+    "SITE_ICON": lambda request: static("images/logo.png"),  # both modes, optimise for 32px height
+    "SITE_SYMBOL": "speed",  # symbol from icon set
+    "SITE_FAVICONS": [
+        {
+            "rel": "icon",
+            "sizes": "32x32",
+            "type": "image/svg+xml",
+            "href": lambda request: static("images/favicon.ico"),
+        },
+    ],
+    "SHOW_HISTORY": False,  # show/hide "History" button, default: True
+    "SHOW_VIEW_ON_SITE": False,  # show/hide "View on site" button, default: True
+    "ENVIRONMENT": "common.views.environment_callback",
+    "DASHBOARD_CALLBACK": "common.views.dashboard_callback",
+    # "THEME": "dark",
+    "LOGIN": {
+        "image": lambda request: static("images/shifo24_bg.png"),
+        "redirect_after": lambda request: reverse_lazy("admin:bot_telegramuser_changelist"),
+    },
+    "COLORS": {
+        "primary": {
+            "50": "250 245 255",
+            "100": "243 232 255",
+            "200": "233 213 255",
+            "300": "216 180 254",
+            "400": "192 132 252",
+            "500": "168 85 247",
+            "600": "147 51 234",
+            "700": "126 34 206",
+            "800": "107 33 168",
+            "900": "88 28 135",
+            "950": "59 7 100",
+        },
+    },
+    "EXTENSIONS": {
+        "modeltranslation": {
+            "flags": {
+                "en": "🇬🇧",
+                "uz": "🇺🇿",
+                "ru": "🇷🇺",
+            },
+        },
+    },
+}

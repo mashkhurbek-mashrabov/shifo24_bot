@@ -3,17 +3,17 @@ from django.utils.translation import gettext_lazy as _
 
 
 class DayChoices(models.TextChoices):
-    MON = 'Mon', _('Monday')
-    TUE = 'Tue', _('Tuesday')
-    WED = 'Wed', _('Wednesday')
-    THU = 'Thu', _('Thursday')
-    FRI = 'Fri', _('Friday')
-    SAT = 'Sat', _('Saturday')
-    SUN = 'Sun', _('Sunday')
+    MON = 'mon', _('Monday')
+    TUE = 'tue', _('Tuesday')
+    WED = 'wed', _('Wednesday')
+    THU = 'thu', _('Thursday')
+    FRI = 'fri', _('Friday')
+    SAT = 'sat', _('Saturday')
+    SUN = 'sun', _('Sunday')
 
 
 class DoctorStatusChoices(models.TextChoices):
-    PENDING = 'Pending', _('Pending')
-    ACTIVE = 'Active', _('Active')
-    INACTIVE = 'Inactive', _('Inactive')
-    REJECTED = 'Rejected', _('Rejected')
+    PENDING = 'pending', _('Pending')
+    ACTIVE = 'active', _('Active')
+    INACTIVE = 'inactive', _('Inactive')
+    REJECTED = 'rejected', _('Rejected')

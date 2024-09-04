@@ -6,18 +6,33 @@ from django.core.serializers import serialize
 from django.http import HttpResponse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from unfold.admin import ModelAdmin
+from unfold.contrib.filters.admin import (
+    ChoicesDropdownFilter,
+    MultipleChoicesDropdownFilter,
+    RangeDateTimeFilter, RangeDateFilter
+)
 
 from .models import TelegramUser
 
 
 @admin.register(TelegramUser)
-class TelegramUserAdmin(admin.ModelAdmin):
+class TelegramUserAdmin(ModelAdmin):
     list_display = ('chat_id', 'user_name', 'language', 'created_at',)
-    list_filter = ('language', 'created_at',)
     search_fields = ('username', 'chat_id', 'name', 'phone_number')
     search_help_text = _("Fields allowed for searching: name, chat ID, username, phone number.")
     actions = ('export_to_json',)
     date_hierarchy = 'created_at'
+
+    compressed_fields = True
+    warn_unsaved_form = True
+
+    list_filter_submit = True
+    list_filter = [
+        ("language", MultipleChoicesDropdownFilter),
+        ("step", ChoicesDropdownFilter),
+        ("created_at", RangeDateFilter),
+    ]
 
     fieldsets = (
         (_('User Details'), {
